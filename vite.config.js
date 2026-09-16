@@ -2393,12 +2393,11 @@ const ADSBDB_CACHE_MAX_ENTRIES = 10000;
 const ADSBDB_CACHE_PRUNE_TO = 9000;
 /**
  * Upstream backstop for `/api/adsbdb`, consulted only when the cache misses.
+ *
  * The client drips enrichment through one shared queue at one dispatch per
- * `ENRICH_DISPATCH_GAP_MS` (200 ms) — a documented ceiling of 5/s, so 300/min,
- * and on a cold cache every one of those is a miss. The cap sits well above
- * that ceiling so a legitimate cold start is never throttled; it exists to stop
- * unbounded keyspace enumeration against a free community API, not to shape
- * normal traffic.
+ * `ENRICH_DISPATCH_GAP_MS` (200 ms), so 300/min, and every one is a miss on a
+ * cold cache. The cap sits well above that so a cold start is never throttled;
+ * it exists to stop keyspace enumeration against a free community API.
  */
 const _adsbdbRateLimiter = makeRateLimiter({ windowMs: 60_000, max: 480, globalMax: 1920 });
 
