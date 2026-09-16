@@ -482,12 +482,12 @@ const _routeRateLimiter = makeRateLimiter({ windowMs: 60_000, max: 60, globalMax
 
 /**
  * Track-backfill limiters for `/api/opensky-track` and `/api/adsblol/trace`.
- * Both routes are keyed by a client-supplied aircraft id, so the per-id cache
- * inside `trackBackfillProxies` bounds memory but not request volume: a caller
- * cycling ids misses every time. An OpenSky `/tracks` miss spends 4 credits
- * from a finite daily budget shared by everyone using this server, so unlike
- * the opt-in OpenAI/Google limiters these are default-on. Backfill fires once
- * per aircraft the operator selects, so both caps sit far above interactive use.
+ *
+ * Both routes are keyed by a client-supplied aircraft id, so a caller cycling
+ * ids misses the per-id cache every time, and an OpenSky `/tracks` miss spends
+ * 4 credits from a daily budget shared by everyone using this server — hence
+ * default-on, unlike the opt-in OpenAI/Google limiters. Backfill fires once per
+ * aircraft selected, so both caps sit far above interactive use.
  */
 const _openSkyTrackRateLimiter = makeRateLimiter({ windowMs: 60_000, max: 30, globalMax: 120 });
 const _adsbLolTraceRateLimiter = makeRateLimiter({ windowMs: 60_000, max: 60, globalMax: 240 });
